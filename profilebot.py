@@ -222,17 +222,7 @@ async def profile(ctx, *args):
                     value="Niveau : " + str(summoner_profile[0]['summonerLevel']) +
                           "\n Solo/Duo : " + ((ranked_solo_data['rank'] + " " + str(ranked_solo_data['lp']) + " LP") if ranked_solo_data is not None else "Non classé") +
                           "\n Score de maitrise : " + str(mastery_score),
-                    inline=True)
-    
-    # Update with top 3 champs
-    top3 = get_top3_champs(summoner_profile[3])
-    embed.add_field(name="Meilleure maitrise de Champions",
-                    value="1 : " + get_champion_name(top3[0][0], version) + " - " + str(top3[0][1]) + " points" +
-                          "\n2 : " + get_champion_name(top3[1][0], version) + " - " + str(top3[1][1]) + " points" +
-                          "\n3 : " + get_champion_name(top3[2][0], version) + " - " + str(top3[2][1]) + " points",
                     inline=False)
-    
-    await message.edit(embed=embed)
     
     # Update with ranked solo/duo information
     if ranked_solo_data is not None:
@@ -248,23 +238,7 @@ async def profile(ctx, *args):
                         inline=True)
         
     await message.edit(embed=embed)
-    
-    # Update with current game information
 
-    if current_game_info is not None:
-        embed.add_field(name='Statut du joueur',
-                        value="Mode : " + get_game_type(current_game_info['gameType']) +
-                              "\n Map : " + get_map_name(current_game_info['gameMap'], version) +
-                              "\n Durée : " + current_game_info['timeElapsedFormatted'] +
-                              "\n Champion : " + get_champion_name(current_game_info['championId'], version),
-                        inline=False)
-    else:
-        embed.add_field(name='Statut du joueur',
-                        value='Pas en partie',
-                        inline=False)
-    
-    await message.edit(embed=embed)
-    
     # Update with ranked flex information
     if ranked_flex_data is not None:
         embed.add_field(name='Classés Flexible',
@@ -272,11 +246,38 @@ async def profile(ctx, *args):
                               "\n LP : " + str(ranked_flex_data['lp']) +
                               "\n Victoires - Défaites : " + str(ranked_flex_data['wins']) + " - " + str(ranked_flex_data['losses']) +
                               "\n Winrate : " + str(ranked_flex_data['winrate']) + "%",
-                        inline=False)
+                        inline=True)
     else:
         embed.add_field(name='Classés Flexible',
                         value="Non classé",
-                        inline=False)
+                        inline=True)
+    
+    await message.edit(embed=embed)
+    
+    # Update with top 3 champs
+    top3 = get_top3_champs(summoner_profile[3])
+    embed.add_field(name="Meilleurs Champions",
+                    value="1 : " + get_champion_name(top3[0][0], version) + " - " + str(top3[0][1]) + " points" +
+                          "\n2 : " + get_champion_name(top3[1][0], version) + " - " + str(top3[1][1]) + " points" +
+                          "\n3 : " + get_champion_name(top3[2][0], version) + " - " + str(top3[2][1]) + " points",
+                    inline=False)
+    
+    await message.edit(embed=embed)
+    
+    
+    
+    # Update with current game information
+    if current_game_info is not None:
+        embed.add_field(name='Statut du joueur',
+                        value="Mode : " + get_game_type(current_game_info['gameType']) +
+                              "\n Map : " + get_map_name(current_game_info['gameMap'], version) +
+                              "\n Durée : " + current_game_info['timeElapsedFormatted'] +
+                              "\n Champion : " + get_champion_name(current_game_info['championId'], version),
+                        inline=True)
+    else:
+        embed.add_field(name='Statut du joueur',
+                        value='Pas en partie',
+                        inline=True)
     
     await message.edit(embed=embed)
 
